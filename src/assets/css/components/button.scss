@@ -1,0 +1,30 @@
+@import '../modules/vars';
+@import '../modules/mixin';
+
+.button {
+	padding: 10px 20px;
+	background-color: transparent;
+	border: none;
+	border-radius: .2em;
+	font-size: rem(18);
+	cursor: pointer;
+	transition: box-shadow .2s;
+
+	&_success {
+		background-color: $green;
+		color: $white;
+
+		&:hover {
+			box-shadow: 0 0 2px $green;
+		}
+	}
+
+	&_danger {
+		background-color: $red;
+		color: $white;
+
+		&:hover {
+			box-shadow: 0 0 2px $red;
+		}
+	}
+}

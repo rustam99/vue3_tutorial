@@ -1,0 +1,10 @@
+@import '../modules/vars';
+@import '../modules/mixin';
+
+.nav {
+	display: flex;
+
+	&__link + &__link {
+		margin-left: 10px;
+	}
+}

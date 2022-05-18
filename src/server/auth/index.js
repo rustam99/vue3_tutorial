@@ -1,4 +1,4 @@
-import { instance } from '../index';
+import { instance, instanceWithToken } from '../index';
 
 function signIn(login, password) {
 	return instance.post('auth/sign_in.php', { login, password })
@@ -10,14 +10,8 @@ function signUp(login, email, password, passwordRetry) {
 		.then(res => res.data);
 }
 
-function check(at) {
-	return instance.post('auth/check.php', {}, { headers: { 'Authorization': at } })
-		.then(res => res.data);
+function check() {
+	return instanceWithToken.get('auth/check.php').then(res => res.data).catch(console.warn);
 }
 
-function refresh(rt) {
-	return instance.post('auth/refresh.php', {}, { headers: { 'Authorization': rt } })
-		.then(res => res.data);
-}
-
-export { signUp, signIn, check, refresh };
+export { signUp, signIn, check };

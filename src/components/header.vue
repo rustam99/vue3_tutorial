@@ -41,6 +41,8 @@ export default {
 	methods: {
 		...mapActions('auth', {
 			logout: 'signOut',
+			checkAuth: 'check',
+			refreshAuth: 'refresh'
 		}),
 		signOut() {
 			this.logout();

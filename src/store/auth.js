@@ -1,5 +1,5 @@
 import { signUp, signIn, check, refresh } from '@/server/auth/';
-import { setTokens, getTokens, removeTokens } from '@/utils/local_storage';
+import { setAccessToken, getAccessToken, removeAccessToken } from '@/utils/local_storage';
 import { getJWTPayload } from '@/utils/token';
 import { timeStampFormat } from '@/utils/format.js';
 
@@ -29,7 +29,7 @@ export default {
 			const response = await signUp(login, email, password, passwordRetry);
 
 			if (response.result) {
-				setTokens(response.result);
+				setAccessToken(response.result);
 
 				commit('setAuthorization', true);
 
@@ -44,7 +44,7 @@ export default {
 			const response = await signIn(login, password);
 
 			if (response.result) {
-				setTokens(response.result);
+				setAccessToken(response.result);
 
 				commit('setAuthorization', true);
 
@@ -56,48 +56,35 @@ export default {
 			}
 		},
 		async signOut({ commit }) {
-			removeTokens();
+			removeAccessToken();
 
 			commit('setAuthorization', false);
 		},
 		async check({ commit, dispatch }) {
-			const tokens = getTokens();
+			const token = getAccessToken();
 
-			if (!tokens.access_token) {
+			if (!token) {
+				commit('setAuthorization', false);
+
 				return false;
 			}
 
-			const response = await check(tokens.access_token);
+			try {
+				await check();
 
-			if (response.result) {
 				commit('setAuthorization', true);
 
 				dispatch('getUserInfo');
 
 				return true;
+			} catch (error) {
+				commit('setAuthorization', false);
+
+				return false;
 			}
-
-			commit('setAuthorization', false);
-
-			return false;
-		},
-		async refresh() {
-			const rt = getTokens().refresh_token;
-
-			if (rt) {
-				const response = await refresh(rt);
-
-				if (response.result) {
-					setTokens(response.message);
-
-					return true;
-				}
-			}
-
-			return false;
 		},
 		getUserInfo({ commit }) {
-			const accessToken = getTokens().access_token;
+			const accessToken = getAccessToken();
 
 			if (accessToken) {
 				const userInfo = getJWTPayload(accessToken);

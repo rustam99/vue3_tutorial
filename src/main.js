@@ -11,7 +11,9 @@ app.use(router);
 
 app.component('modal', Modal);
 
-app.mount('#app');
+(async () => {
+	app.mount('#app');
+})();
 
 import 'normalize.css';
 import '@/assets/fonts/fonts.css';

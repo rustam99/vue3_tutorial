@@ -29,11 +29,7 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
 	if (to.meta?.auth) {
 		if (!await store.dispatch('auth/check')) {
-			const isRefreshSuccess = await store.dispatch('auth/refresh');
-
-			if (!isRefreshSuccess) {
-				return '/sign-in';
-			}
+			return '/sign-in';
 		}
 	}
 });
